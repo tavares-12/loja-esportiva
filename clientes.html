@@ -1,1 +1,43 @@
-<h1>Clientes</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Loja Esportiva</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header><h1>👥 Clientes</h1></header>
+    <nav>
+        <a href="index.html">Início</a>
+        <a href="produtos.html">Produtos</a>
+        <a href="clientes.html">Clientes</a>
+        <a href="vendas.html">Vendas</a>
+        <a href="relatorios.html">Relatórios</a>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2>Lista de Clientes</h2>
+            <button class="btn btn-primary" onclick="abrirModalCliente()">+ Novo Cliente</button>
+            <table id="tabelaClientes">
+                <thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Ações</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="modalCliente" class="modal">
+        <div class="modal-content">
+            <h2 id="modalClienteTitle">Novo Cliente</h2>
+            <input type="hidden" id="clienteId">
+            <div class="form-group"><input type="text" id="nomeCliente" placeholder="Nome completo"></div>
+            <div class="form-group"><input type="email" id="emailCliente" placeholder="Email"></div>
+            <div class="form-group"><input type="tel" id="telefoneCliente" placeholder="Telefone"></div>
+            <button class="btn btn-success" onclick="salvarCliente()">Salvar</button>
+            <button class="btn btn-danger" onclick="fecharModalCliente()">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
