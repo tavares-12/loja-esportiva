@@ -3,30 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loja Esportiva - Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
-        header { background: #1e3a8a; color: white; padding: 1rem; text-align: center; }
-        nav { background: #3b82f6; padding: 0.5rem; }
-        nav a { color: white; margin: 0 1rem; text-decoration: none; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
-        .card { background: white; padding: 1rem; margin: 1rem 0; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    </style>
+    <title>Loja Esportiva</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>🏪 Loja Esportiva</h1>
+        <p>Gestão Completa da Sua Loja</p>
     </header>
     <nav>
-        <a href="index.html">Início</a>
-        <a href="produtos.html">Produtos</a>
-        <a href="clientes.html">Clientes</a>
-        <a href="vendas.html">Vendas</a>
-        <a href="relatorios.html">Relatórios</a>
+        <a href="index.html">🏠 Início</a>
+        <a href="produtos.html">📦 Produtos</a>
+        <a href="clientes.html">👥 Clientes</a>
+        <a href="vendas.html">💰 Vendas</a>
+        <a href="relatorios.html">📊 Relatórios</a>
     </nav>
     <div class="container">
-        <h2>Bem-vindo à Loja Esportiva!</h2>
-        <p>Gerencie sua loja de forma simples e eficiente.</p>
+        <div class="card">
+            <h2>Bem-vindo à Loja Esportiva! 👋</h2>
+            <p>Use o menu acima para gerenciar produtos, clientes, realizar vendas e consultar relatórios.</p>
+            <p><strong>Dados salvos automaticamente no navegador (localStorage).</strong></p>
+        </div>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -4,9 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos - Loja Esportiva</title>
-    <style>/* mesmo CSS */</style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- conteúdo virá em seguida -->
+    <header><h1>📦 Produtos</h1></header>
+    <nav><!-- mesmo nav --></nav>
+    <div class="container">
+        <div class="card">
+            <h2>Lista de Produtos</h2>
+            <button class="btn btn-primary" onclick="abrirModalProduto()">+ Novo Produto</button>
+            <table id="tabelaProdutos">
+                <thead><tr><th>ID</th><th>Nome</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal Produto -->
+    <div id="modalProduto" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Novo Produto</h2>
+            <input type="hidden" id="produtoId">
+            <div class="form-group"><input type="text" id="nomeProduto" placeholder="Nome do produto"></div>
+            <div class="form-group"><input type="number" id="precoProduto" placeholder="Preço" step="0.01"></div>
+            <div class="form-group"><input type="number" id="estoqueProduto" placeholder="Estoque"></div>
+            <button class="btn btn-success" onclick="salvarProduto()">Salvar</button>
+            <button class="btn btn-danger" onclick="fecharModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function carregarProdutos() { /* lógica */ }
+        // ... mais funções
+    </script>
 </body>
 </html>
