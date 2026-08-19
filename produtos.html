@@ -3,54 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produtos | Loja Esportiva</title>
+    <title>Produtos | SportMax</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1><i class="fas fa-box"></i> Produtos</h1>
-            <p>Gerencie o estoque da loja</p>
+    <div class="top-bar">
+        <div class="container-fluid">
+            <span><i class="fas fa-truck"></i> Frete grátis acima de R$ 299</span>
+            <span><i class="fas fa-shield-alt"></i> Compra 100% segura</span>
+        </div>
+    </div>
+
+    <header class="main-header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fas fa-bolt"></i>
+                <div><strong>SportMax</strong><small>Loja Esportiva</small></div>
+            </a>
+            <div class="search-box">
+                <input type="text" id="buscaProdutos" placeholder="Buscar produtos..." onkeyup="filtrarProdutos()">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="header-actions">
+                <a href="carrinho.html" class="header-btn cart-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                    <span>Carrinho</span>
+                </a>
+            </div>
         </div>
     </header>
 
-    <nav>
-        <a href="index.html"><i class="fas fa-home"></i> Início</a>
-        <a href="produtos.html" class="active"><i class="fas fa-box"></i> Produtos</a>
-        <a href="clientes.html"><i class="fas fa-users"></i> Clientes</a>
-        <a href="vendas.html"><i class="fas fa-shopping-cart"></i> Vendas</a>
-        <a href="relatorios.html"><i class="fas fa-chart-bar"></i> Relatórios</a>
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html"><i class="fas fa-home"></i> Início</a>
+            <a href="produtos.html" class="active"><i class="fas fa-th-large"></i> Produtos</a>
+            <a href="produtos.html?cat=Futebol"><i class="fas fa-futbol"></i> Futebol</a>
+            <a href="produtos.html?cat=Corrida"><i class="fas fa-running"></i> Corrida</a>
+            <a href="produtos.html?cat=Fitness"><i class="fas fa-dumbbell"></i> Fitness</a>
+            <a href="vendas.html"><i class="fas fa-cash-register"></i> Vendas</a>
+            <a href="relatorios.html"><i class="fas fa-chart-line"></i> Relatórios</a>
+        </div>
     </nav>
 
-    <main class="container">
-        <div class="card">
-            <div class="card-header">
-                <h2>Lista de Produtos</h2>
-                <button class="btn btn-primary" onclick="abrirModalProduto()">
-                    <i class="fas fa-plus"></i> Novo Produto
-                </button>
-            </div>
+    <main class="container page-content">
+        <div class="page-header">
+            <h1 id="tituloPagina">Todos os Produtos</h1>
+            <p id="subtituloPagina">Encontre o equipamento perfeito para o seu esporte</p>
+        </div>
 
-            <div class="table-responsive">
-                <table id="tabelaProdutos">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Categoria</th>
-                            <th>Preço</th>
-                            <th>Estoque</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+        <div class="catalog-layout">
+            <!-- FILTROS -->
+            <aside class="filters">
+                <h3>Filtros</h3>
+                <div class="filter-group">
+                    <label>Categoria</label>
+                    <select id="filtroCategoria" onchange="filtrarProdutos()">
+                        <option value="">Todas</option>
+                        <option value="Futebol">Futebol</option>
+                        <option value="Corrida">Corrida</option>
+                        <option value="Fitness">Fitness</option>
+                        <option value="Basquete">Basquete</option>
+                        <option value="Tênis">Tênis</option>
+                        <option value="Natação">Natação</option>
+                        <option value="Ciclismo">Ciclismo</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Ordenar por</label>
+                    <select id="ordenarPor" onchange="filtrarProdutos()">
+                        <option value="nome">Nome A-Z</option>
+                        <option value="preco-asc">Menor preço</option>
+                        <option value="preco-desc">Maior preço</option>
+                        <option value="estoque">Mais estoque</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Preço máximo: <span id="precoMaxLabel">R$ 1000</span></label>
+                    <input type="range" id="filtroPreco" min="50" max="1000" value="1000" step="10" oninput="atualizarPrecoLabel(); filtrarProdutos()">
+                </div>
+                <button class="btn btn-outline btn-block" onclick="limparFiltros()">Limpar filtros</button>
+
+                <div class="admin-box">
+                    <h4><i class="fas fa-cog"></i> Administração</h4>
+                    <button class="btn btn-primary btn-block" onclick="abrirModalProduto()">
+                        <i class="fas fa-plus"></i> Novo Produto
+                    </button>
+                </div>
+            </aside>
+
+            <!-- GRID DE PRODUTOS -->
+            <div class="catalog-main">
+                <div class="products-grid" id="produtosGrid">
+                    <!-- preenchido via JS -->
+                </div>
+                <p class="empty-state" id="emptyState" style="display:none;">Nenhum produto encontrado com esses filtros.</p>
             </div>
         </div>
     </main>
 
-    <!-- Modal Produto -->
+    <!-- Modal Produto (Admin) -->
     <div id="modalProduto" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -60,29 +113,34 @@
             <input type="hidden" id="produtoId">
             <div class="form-group">
                 <label>Nome do Produto</label>
-                <input type="text" id="nomeProduto" placeholder="Ex: Bola de Futebol" required>
+                <input type="text" id="nomeProduto" placeholder="Ex: Tênis Nike Air Zoom">
             </div>
             <div class="form-group">
                 <label>Categoria</label>
                 <select id="categoriaProduto">
                     <option value="Futebol">Futebol</option>
                     <option value="Corrida">Corrida</option>
-                    <option value="Natação">Natação</option>
+                    <option value="Fitness">Fitness</option>
                     <option value="Basquete">Basquete</option>
                     <option value="Tênis">Tênis</option>
-                    <option value="Fitness">Fitness</option>
+                    <option value="Natação">Natação</option>
+                    <option value="Ciclismo">Ciclismo</option>
                     <option value="Outros">Outros</option>
                 </select>
             </div>
             <div class="form-row">
                 <div class="form-group">
                     <label>Preço (R$)</label>
-                    <input type="number" id="precoProduto" step="0.01" min="0" placeholder="0.00" required>
+                    <input type="number" id="precoProduto" step="0.01" min="0">
                 </div>
                 <div class="form-group">
                     <label>Estoque</label>
-                    <input type="number" id="estoqueProduto" min="0" placeholder="0" required>
+                    <input type="number" id="estoqueProduto" min="0">
                 </div>
+            </div>
+            <div class="form-group">
+                <label>URL da Imagem (opcional)</label>
+                <input type="text" id="imagemProduto" placeholder="https://...">
             </div>
             <div class="modal-actions">
                 <button class="btn btn-success" onclick="salvarProduto()"><i class="fas fa-save"></i> Salvar</button>
@@ -91,15 +149,29 @@
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2026 SportMax Loja Esportiva</p>
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 SportMax Loja Esportiva</p>
+            </div>
+        </div>
     </footer>
 
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             carregarDadosIniciais();
-            carregarProdutos();
+            atualizarCarrinhoUI();
+
+            // Verifica parâmetro de categoria na URL
+            const params = new URLSearchParams(window.location.search);
+            const cat = params.get('cat');
+            if (cat) {
+                document.getElementById('filtroCategoria').value = cat;
+                document.getElementById('tituloPagina').textContent = cat;
+                document.getElementById('subtituloPagina').textContent = `Produtos da categoria ${cat}`;
+            }
+            filtrarProdutos();
         });
     </script>
 </body>

@@ -1,55 +1,55 @@
-# 🏪 SportMax - Loja Esportiva
+# ⚡ SportMax — Loja Esportiva
 
-Sistema completo de gestão para loja esportiva desenvolvido com **HTML**, **CSS** e **JavaScript**.
+Site profissional de e-commerce esportivo com área de administração.
 
-## ✨ Funcionalidades
+## 🛒 Funcionalidades da Loja
 
-- **Início (Dashboard)** – Resumo de produtos, clientes, vendas, faturamento e estoque baixo
-- **Produtos** – CRUD completo (criar, editar, excluir) com categorias e controle de estoque
-- **Clientes** – Cadastro completo de clientes
-- **Vendas** – Carrinho de compras, seleção de cliente/produto, baixa automática de estoque e histórico
-- **Relatórios** – Faturamento, ticket médio, gráficos de categorias e top produtos + status de estoque
+- **Home** com hero, categorias e produtos em destaque
+- **Catálogo** com filtros por categoria, preço e ordenação
+- **Carrinho de compras** completo (adicionar, alterar qtd, remover)
+- **Frete grátis** acima de R$ 299
+- **Checkout** com seleção de cliente e baixa automática de estoque
+
+## 🛠️ Área Admin
+
+- Gestão de **Produtos** (CRUD)
+- Gestão de **Clientes**
+- **Histórico de Vendas**
+- **Relatórios** com gráficos (Chart.js)
+
+## 📦 24 produtos de exemplo
+
+Futebol, Corrida, Fitness, Basquete, Tênis, Natação e Ciclismo.
 
 ## 💾 Banco de Dados
 
-Os dados são salvos no **localStorage** do navegador (persistem mesmo após fechar a aba).
-
-Chaves utilizadas:
+Dados salvos no **localStorage** do navegador:
 - `sportmax_produtos`
 - `sportmax_clientes`
 - `sportmax_vendas`
+- `sportmax_carrinho`
 
 ## 🚀 Como usar
 
-1. Abra o arquivo `index.html` no navegador **ou**
-2. Publique no GitHub Pages:
-   - Vá em **Settings → Pages**
-   - Source: Deploy from a branch → `main` / root
-   - Acesse: `https://tavares-12.github.io/loja-esportiva/`
+1. Abra `index.html` no navegador **ou**
+2. Ative o **GitHub Pages**:
+   - Settings → Pages → Deploy from branch → `main`
+   - Acesse: https://tavares-12.github.io/loja-esportiva/
 
-## 📁 Estrutura de arquivos
+## 📁 Arquivos
 
 ```
-loja-esportiva/
-├── index.html          # Página inicial / Dashboard
-├── produtos.html       # Gestão de produtos
-├── clientes.html       # Gestão de clientes
-├── vendas.html         # Realização e histórico de vendas
-├── relatorios.html     # Relatórios e gráficos
-├── styles.css          # Estilos responsivos
-├── script.js           # Lógica + localStorage
+├── index.html       → Home da loja
+├── produtos.html    → Catálogo + Admin produtos
+├── carrinho.html    → Carrinho e checkout
+├── clientes.html    → Gestão de clientes
+├── vendas.html      → Histórico de vendas
+├── relatorios.html  → Relatórios e gráficos
+├── styles.css
+├── script.js
 └── README.md
 ```
 
-## 🛠️ Tecnologias
-
-- HTML5
-- CSS3 (Flexbox + Grid + Design moderno)
-- JavaScript (Vanilla)
-- Chart.js (gráficos)
-- Font Awesome (ícones)
-- localStorage (persistência de dados)
-
 ---
 
-Feito com ❤️ para o projeto de Loja Esportiva.
+**SportMax** — Performance que você sente.

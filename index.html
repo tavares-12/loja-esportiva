@@ -3,65 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Início | Loja Esportiva</title>
+    <title>SportMax | Loja Esportiva Oficial</title>
+    <meta name="description" content="A melhor loja esportiva online. Tênis, camisas, bolas, equipamentos de futebol, corrida, fitness e muito mais.">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1><i class="fas fa-futbol"></i> SportMax Loja Esportiva</h1>
-            <p>Sistema de Gestão Completo</p>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="container-fluid">
+            <span><i class="fas fa-truck"></i> Frete grátis acima de R$ 299</span>
+            <span><i class="fas fa-shield-alt"></i> Compra 100% segura</span>
+            <span><i class="fas fa-headset"></i> Atendimento 7 dias</span>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="main-header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <i class="fas fa-bolt"></i>
+                <div>
+                    <strong>SportMax</strong>
+                    <small>Loja Esportiva</small>
+                </div>
+            </a>
+
+            <div class="search-box">
+                <input type="text" id="buscaHome" placeholder="Buscar produtos, marcas..." onkeyup="buscarProdutos(this.value)">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+
+            <div class="header-actions">
+                <a href="clientes.html" class="header-btn" title="Área Admin">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Admin</span>
+                </a>
+                <a href="carrinho.html" class="header-btn cart-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                    <span>Carrinho</span>
+                </a>
+            </div>
         </div>
     </header>
 
-    <nav>
-        <a href="index.html" class="active"><i class="fas fa-home"></i> Início</a>
-        <a href="produtos.html"><i class="fas fa-box"></i> Produtos</a>
-        <a href="clientes.html"><i class="fas fa-users"></i> Clientes</a>
-        <a href="vendas.html"><i class="fas fa-shopping-cart"></i> Vendas</a>
-        <a href="relatorios.html"><i class="fas fa-chart-bar"></i> Relatórios</a>
+    <!-- NAV -->
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Início</a>
+            <a href="produtos.html"><i class="fas fa-th-large"></i> Produtos</a>
+            <a href="produtos.html?cat=Futebol"><i class="fas fa-futbol"></i> Futebol</a>
+            <a href="produtos.html?cat=Corrida"><i class="fas fa-running"></i> Corrida</a>
+            <a href="produtos.html?cat=Fitness"><i class="fas fa-dumbbell"></i> Fitness</a>
+            <a href="produtos.html?cat=Basquete"><i class="fas fa-basketball-ball"></i> Basquete</a>
+            <a href="vendas.html"><i class="fas fa-cash-register"></i> Vendas</a>
+            <a href="relatorios.html"><i class="fas fa-chart-line"></i> Relatórios</a>
+        </div>
     </nav>
 
-    <main class="container">
-        <section class="hero">
-            <h2>Bem-vindo à SportMax! 👋</h2>
-            <p>Gerencie produtos, clientes, vendas e consulte relatórios de forma rápida e fácil.</p>
-            <p class="info"><i class="fas fa-database"></i> Dados salvos automaticamente no navegador (localStorage)</p>
-        </section>
-
-        <div class="dashboard-grid" id="dashboard">
-            <!-- Cards preenchidos via JS -->
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">Nova Coleção 2026</span>
+            <h1>Equipamentos de<br><span>Alto Desempenho</span></h1>
+            <p>Tênis, camisas oficiais, bolas e equipamentos das melhores marcas do mundo. Performance que você sente.</p>
+            <div class="hero-btns">
+                <a href="produtos.html" class="btn btn-primary btn-lg">Ver Produtos</a>
+                <a href="produtos.html?cat=Corrida" class="btn btn-outline btn-lg">Linha Running</a>
+            </div>
         </div>
-
-        <section class="card">
-            <h3><i class="fas fa-bolt"></i> Ações Rápidas</h3>
-            <div class="quick-actions">
-                <a href="produtos.html" class="btn btn-primary"><i class="fas fa-plus"></i> Novo Produto</a>
-                <a href="clientes.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Novo Cliente</a>
-                <a href="vendas.html" class="btn btn-success"><i class="fas fa-cash-register"></i> Nova Venda</a>
-                <a href="relatorios.html" class="btn btn-info"><i class="fas fa-chart-line"></i> Ver Relatórios</a>
+        <div class="hero-visual">
+            <div class="hero-card">
+                <i class="fas fa-percentage"></i>
+                <strong>Até 40% OFF</strong>
+                <span>Em selecionados</span>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="card">
-            <h3><i class="fas fa-clock"></i> Últimas Vendas</h3>
-            <div id="ultimasVendas" class="table-responsive">
-                <p class="empty">Nenhuma venda registrada ainda.</p>
+    <!-- CATEGORIAS -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Compre por Categoria</h2>
+                <a href="produtos.html">Ver todos →</a>
             </div>
-        </section>
-    </main>
+            <div class="categories-grid" id="categoriasGrid">
+                <!-- preenchido via JS -->
+            </div>
+        </div>
+    </section>
 
-    <footer>
-        <p>&copy; 2026 SportMax Loja Esportiva | Feito com HTML, CSS & JavaScript</p>
+    <!-- DESTAQUES -->
+    <section class="section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2>Destaques da Semana</h2>
+                <a href="produtos.html">Ver todos →</a>
+            </div>
+            <div class="products-grid" id="destaquesGrid">
+                <!-- preenchido via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- BENEFÍCIOS -->
+    <section class="benefits">
+        <div class="container">
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <i class="fas fa-truck-fast"></i>
+                    <h4>Frete Grátis</h4>
+                    <p>Acima de R$ 299 para todo o Brasil</p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-undo"></i>
+                    <h4>Troca Fácil</h4>
+                    <p>30 dias para trocar ou devolver</p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-lock"></i>
+                    <h4>Compra Segura</h4>
+                    <p>Seus dados protegidos</p>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-medal"></i>
+                    <h4>Produtos Originais</h4>
+                    <p>100% originais e garantidos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3><i class="fas fa-bolt"></i> SportMax</h3>
+                    <p>A loja esportiva completa para quem leva o esporte a sério. Qualidade, performance e preço justo.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Institucional</h4>
+                    <a href="#">Sobre nós</a>
+                    <a href="#">Trabalhe conosco</a>
+                    <a href="#">Política de privacidade</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Atendimento</h4>
+                    <a href="#">Central de ajuda</a>
+                    <a href="#">Trocas e devoluções</a>
+                    <a href="#">Meus pedidos</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Contato</h4>
+                    <p><i class="fas fa-envelope"></i> contato@sportmax.com.br</p>
+                    <p><i class="fas fa-phone"></i> (11) 4002-8922</p>
+                    <p><i class="fas fa-map-marker-alt"></i> São Paulo - SP</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 SportMax Loja Esportiva. Todos os direitos reservados.</p>
+            </div>
+        </div>
     </footer>
 
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             carregarDadosIniciais();
-            atualizarDashboard();
-            carregarUltimasVendas();
+            atualizarCarrinhoUI();
+            renderCategorias();
+            renderDestaques();
         });
     </script>
 </body>
