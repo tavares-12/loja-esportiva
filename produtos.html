@@ -3,40 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produtos - Loja Esportiva</title>
+    <title>Produtos | Loja Esportiva</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-    <header><h1>📦 Produtos</h1></header>
-    <nav><!-- mesmo nav --></nav>
-    <div class="container">
-        <div class="card">
-            <h2>Lista de Produtos</h2>
-            <button class="btn btn-primary" onclick="abrirModalProduto()">+ Novo Produto</button>
-            <table id="tabelaProdutos">
-                <thead><tr><th>ID</th><th>Nome</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
-                <tbody></tbody>
-            </table>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-box"></i> Produtos</h1>
+            <p>Gerencie o estoque da loja</p>
         </div>
-    </div>
+    </header>
+
+    <nav>
+        <a href="index.html"><i class="fas fa-home"></i> Início</a>
+        <a href="produtos.html" class="active"><i class="fas fa-box"></i> Produtos</a>
+        <a href="clientes.html"><i class="fas fa-users"></i> Clientes</a>
+        <a href="vendas.html"><i class="fas fa-shopping-cart"></i> Vendas</a>
+        <a href="relatorios.html"><i class="fas fa-chart-bar"></i> Relatórios</a>
+    </nav>
+
+    <main class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Lista de Produtos</h2>
+                <button class="btn btn-primary" onclick="abrirModalProduto()">
+                    <i class="fas fa-plus"></i> Novo Produto
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table id="tabelaProdutos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 
     <!-- Modal Produto -->
     <div id="modalProduto" class="modal">
         <div class="modal-content">
-            <h2 id="modalTitle">Novo Produto</h2>
+            <div class="modal-header">
+                <h2 id="modalTitle">Novo Produto</h2>
+                <button class="close-btn" onclick="fecharModal('modalProduto')">&times;</button>
+            </div>
             <input type="hidden" id="produtoId">
-            <div class="form-group"><input type="text" id="nomeProduto" placeholder="Nome do produto"></div>
-            <div class="form-group"><input type="number" id="precoProduto" placeholder="Preço" step="0.01"></div>
-            <div class="form-group"><input type="number" id="estoqueProduto" placeholder="Estoque"></div>
-            <button class="btn btn-success" onclick="salvarProduto()">Salvar</button>
-            <button class="btn btn-danger" onclick="fecharModal()">Cancelar</button>
+            <div class="form-group">
+                <label>Nome do Produto</label>
+                <input type="text" id="nomeProduto" placeholder="Ex: Bola de Futebol" required>
+            </div>
+            <div class="form-group">
+                <label>Categoria</label>
+                <select id="categoriaProduto">
+                    <option value="Futebol">Futebol</option>
+                    <option value="Corrida">Corrida</option>
+                    <option value="Natação">Natação</option>
+                    <option value="Basquete">Basquete</option>
+                    <option value="Tênis">Tênis</option>
+                    <option value="Fitness">Fitness</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Preço (R$)</label>
+                    <input type="number" id="precoProduto" step="0.01" min="0" placeholder="0.00" required>
+                </div>
+                <div class="form-group">
+                    <label>Estoque</label>
+                    <input type="number" id="estoqueProduto" min="0" placeholder="0" required>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-success" onclick="salvarProduto()"><i class="fas fa-save"></i> Salvar</button>
+                <button class="btn btn-secondary" onclick="fecharModal('modalProduto')">Cancelar</button>
+            </div>
         </div>
     </div>
 
+    <footer>
+        <p>&copy; 2026 SportMax Loja Esportiva</p>
+    </footer>
+
     <script src="script.js"></script>
     <script>
-        function carregarProdutos() { /* lógica */ }
-        // ... mais funções
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDadosIniciais();
+            carregarProdutos();
+        });
     </script>
 </body>
 </html>

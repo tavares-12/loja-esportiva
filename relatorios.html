@@ -3,18 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatórios - Loja Esportiva</title>
+    <title>Relatórios | Loja Esportiva</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header><h1>📊 Relatórios</h1></header>
-    <nav><!-- nav --></nav>
-    <div class="container">
-        <div class="card">
-            <h2>Total de Vendas</h2>
-            <p id="totalVendas">Carregando...</p>
+    <header>
+        <div class="header-content">
+            <h1><i class="fas fa-chart-bar"></i> Relatórios</h1>
+            <p>Análise de desempenho da loja</p>
         </div>
-    </div>
+    </header>
+
+    <nav>
+        <a href="index.html"><i class="fas fa-home"></i> Início</a>
+        <a href="produtos.html"><i class="fas fa-box"></i> Produtos</a>
+        <a href="clientes.html"><i class="fas fa-users"></i> Clientes</a>
+        <a href="vendas.html"><i class="fas fa-shopping-cart"></i> Vendas</a>
+        <a href="relatorios.html" class="active"><i class="fas fa-chart-bar"></i> Relatórios</a>
+    </nav>
+
+    <main class="container">
+        <div class="dashboard-grid" id="resumoRelatorio">
+            <!-- Cards de resumo -->
+        </div>
+
+        <div class="charts-grid">
+            <div class="card">
+                <h3>Vendas por Categoria</h3>
+                <canvas id="chartCategorias" height="250"></canvas>
+            </div>
+            <div class="card">
+                <h3>Top 5 Produtos Mais Vendidos</h3>
+                <canvas id="chartProdutos" height="250"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-boxes"></i> Status do Estoque</h3>
+            <div class="table-responsive">
+                <table id="tabelaEstoque">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Estoque</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SportMax Loja Esportiva</p>
+    </footer>
+
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDadosIniciais();
+            gerarRelatorios();
+        });
+    </script>
 </body>
 </html>
