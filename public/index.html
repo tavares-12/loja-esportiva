@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SportMax | Loja Esportiva Oficial</title>
+    <title>SportMax | Loja Esportiva</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <!-- CABEÇALHO PADRÃO -->
     <div class="top-bar">
         <div class="container-fluid">
             <span><i class="fas fa-truck"></i> Frete grátis acima de R$ 299</span>
             <span><i class="fas fa-shield-alt"></i> Compra 100% segura</span>
-            <span><i class="fas fa-headset"></i> Atendimento 7 dias</span>
+            <span id="userInfo"></span>
         </div>
     </div>
 
@@ -21,26 +20,20 @@
         <div class="header-inner">
             <a href="index.html" class="logo">
                 <i class="fas fa-bolt"></i>
-                <div>
-                    <strong>SportMax</strong>
-                    <small>Loja Esportiva</small>
-                </div>
+                <div><strong>SportMax</strong><small>Loja Esportiva</small></div>
             </a>
-
             <div class="search-box">
-                <input type="text" id="buscaHome" placeholder="Buscar produtos, marcas...">
+                <input type="text" placeholder="Buscar produtos...">
                 <button type="button" onclick="location.href='produtos.html'"><i class="fas fa-search"></i></button>
             </div>
-
             <div class="header-actions">
-                <a href="clientes.html" class="header-btn" title="Área Admin">
-                    <i class="fas fa-user-cog"></i>
-                    <span>Admin</span>
-                </a>
                 <a href="carrinho.html" class="header-btn cart-btn">
                     <i class="fas fa-shopping-bag"></i>
                     <span class="cart-count" id="cartCount">0</span>
                     <span>Carrinho</span>
+                </a>
+                <a href="#" class="header-btn" onclick="sair();return false;" title="Sair">
+                    <i class="fas fa-sign-out-alt"></i> <span>Sair</span>
                 </a>
             </div>
         </div>
@@ -51,22 +44,18 @@
             <a href="index.html" class="active"><i class="fas fa-home"></i> Início</a>
             <a href="produtos.html"><i class="fas fa-th-large"></i> Produtos</a>
             <a href="carrinho.html"><i class="fas fa-shopping-bag"></i> Carrinho</a>
-            <a href="contato.html"><i class="fas fa-envelope"></i> Contato</a>
-            <a href="clientes.html"><i class="fas fa-users"></i> Clientes</a>
-            <a href="vendas.html"><i class="fas fa-cash-register"></i> Vendas</a>
-            <a href="relatorios.html"><i class="fas fa-chart-line"></i> Relatórios</a>
+            <a href="vendas.html" class="admin-only"><i class="fas fa-cash-register"></i> Vendas</a>
+            <a href="relatorios.html" class="admin-only"><i class="fas fa-chart-line"></i> Relatórios</a>
         </div>
     </nav>
-    <!-- FIM CABEÇALHO -->
 
     <section class="hero">
         <div class="hero-content">
             <span class="hero-badge">Nova Coleção 2026</span>
             <h1>Equipamentos de<br><span>Alto Desempenho</span></h1>
-            <p>Tênis, camisas oficiais, bolas e equipamentos das melhores marcas do mundo. Performance que você sente.</p>
+            <p>Tênis, camisas oficiais, bolas e equipamentos das melhores marcas.</p>
             <div class="hero-btns">
                 <a href="produtos.html" class="btn btn-primary btn-lg">Ver Produtos</a>
-                <a href="contato.html" class="btn btn-outline btn-lg">Fale Conosco</a>
             </div>
         </div>
         <div class="hero-visual">
@@ -80,39 +69,20 @@
 
     <section class="section">
         <div class="container">
-            <div class="section-header">
-                <h2>Compre por Categoria</h2>
-                <a href="produtos.html">Ver todos →</a>
-            </div>
+            <div class="section-header"><h2>Categorias</h2><a href="produtos.html">Ver todos →</a></div>
             <div class="categories-grid" id="categoriasGrid"></div>
         </div>
     </section>
 
     <section class="section bg-light">
         <div class="container">
-            <div class="section-header">
-                <h2>Destaques da Semana</h2>
-                <a href="produtos.html">Ver todos →</a>
-            </div>
+            <div class="section-header"><h2>Destaques</h2><a href="produtos.html">Ver todos →</a></div>
             <div class="products-grid" id="destaquesGrid"></div>
         </div>
     </section>
 
-    <section class="benefits">
-        <div class="container">
-            <div class="benefits-grid">
-                <div class="benefit-item"><i class="fas fa-truck-fast"></i><h4>Frete Grátis</h4><p>Acima de R$ 299</p></div>
-                <div class="benefit-item"><i class="fas fa-undo"></i><h4>Troca Fácil</h4><p>30 dias para trocar</p></div>
-                <div class="benefit-item"><i class="fas fa-lock"></i><h4>Compra Segura</h4><p>Dados protegidos</p></div>
-                <div class="benefit-item"><i class="fas fa-medal"></i><h4>Originais</h4><p>100% garantidos</p></div>
-            </div>
-        </div>
-    </section>
-
     <footer class="main-footer">
-        <div class="container">
-            <div class="footer-bottom"><p>&copy; 2026 SportMax Loja Esportiva. Todos os direitos reservados.</p></div>
-        </div>
+        <div class="container"><div class="footer-bottom"><p>&copy; 2026 SportMax</p></div></div>
     </footer>
 
     <script src="script.js"></script>
@@ -120,6 +90,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await carregarDadosIniciais();
             atualizarCarrinhoUI();
+            atualizarHeaderAuth();
             renderCategorias();
             renderDestaques();
         });

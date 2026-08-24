@@ -1,9 +1,73 @@
-// SportMax - Frontend com API (Express + SQLite)
+// SportMax - Frontend com API + autenticação
 const API = '/api';
 let produtos = [];
 let clientes = [];
 let vendas = [];
 let carrinho = JSON.parse(localStorage.getItem('sportmax_carrinho') || '[]');
+
+// ---------- AUTENTICAÇÃO ----------
+function getSessao() {
+  return JSON.parse(localStorage.getItem('sportmax_sessao') || 'null');
+}
+
+function isAdmin() {
+  const s = getSessao();
+  return s && s.tipo === 'admin';
+}
+
+function isLogado() {
+  const s = getSessao();
+  return s && s.tipo;
+}
+
+function exigirLogin() {
+  // Páginas públicas de auth
+  const path = window.location.pathname;
+  if (path.endsWith('login.html') || path.endsWith('cadastro.html')) return;
+
+  if (!isLogado()) {
+    window.location.href = 'login.html';
+    return false;
+  }
+  return true;
+}
+
+function exigirAdmin() {
+  if (!exigirLogin()) return false;
+  if (!isAdmin()) {
+    alert('Acesso restrito ao administrador.');
+    window.location.href = 'index.html';
+    return false;
+  }
+  return true;
+}
+
+function sair() {
+  localStorage.removeItem('sportmax_sessao');
+  window.location.href = 'login.html';
+}
+
+function atualizarHeaderAuth() {
+  const s = getSessao();
+  const el = document.getElementById('userInfo');
+  if (el && s) {
+    el.innerHTML = `<i class="fas fa-user"></i> ${s.nome} (${s.tipo === 'admin' ? 'Admin' : 'Comprador'})`;
+  }
+  // Esconde links admin para comprador
+  document.querySelectorAll('.admin-only').forEach(a => {
+    a.style.display = isAdmin() ? '' : 'none';
+  });
+}
+
+// Roda auth no carregamento de páginas protegidas
+(function () {
+  const path = window.location.pathname;
+  if (!path.endsWith('login.html') && !path.endsWith('cadastro.html')) {
+    if (!isLogado()) {
+      window.location.href = 'login.html';
+    }
+  }
+})();
 
 async function api(url, options = {}) {
   const res = await fetch(API + url, {
@@ -23,7 +87,7 @@ async function carregarDadosIniciais() {
     clientes = await api('/clientes');
     vendas = await api('/vendas');
   } catch (e) {
-    console.warn('API offline, usando dados vazios:', e.message);
+    console.warn('API offline:', e.message);
     produtos = []; clientes = []; vendas = [];
   }
 }
@@ -46,7 +110,6 @@ function getIconeCategoria(cat) {
   return map[cat] || 'fa-box';
 }
 
-// Carrinho
 function atualizarCarrinhoUI() {
   const count = carrinho.reduce((s, i) => s + i.quantidade, 0);
   document.querySelectorAll('#cartCount, .cart-count').forEach(el => { if (el) el.textContent = count; });
@@ -167,7 +230,7 @@ function criarCardProduto(p, admin = false) {
   let acoes = esgotado
     ? '<button class="btn btn-secondary btn-sm" disabled>Esgotado</button>'
     : `<button class="btn btn-primary btn-sm" onclick="adicionarAoCarrinho(${p.id})"><i class="fas fa-shopping-bag"></i> Comprar</button>`;
-  if (admin) acoes += ` <button class="btn btn-secondary btn-sm" onclick="editarProdutoById(${p.id})"><i class="fas fa-edit"></i></button>`;
+  if (admin && isAdmin()) acoes += ` <button class="btn btn-secondary btn-sm" onclick="editarProdutoById(${p.id})"><i class="fas fa-edit"></i></button>`;
   return `<div class="product-card">
     <div class="product-img">${badge}<i class="fas ${getIconeCategoria(p.categoria)} placeholder-icon"></i></div>
     <div class="product-body">
@@ -231,15 +294,20 @@ function atualizarPrecoLabel() {
 }
 
 function limparFiltros() {
-  ['buscaProdutos','filtroCategoria','ordenarPor','filtroPreco'].forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (el) el.value = i === 3 ? 1000 : (i === 2 ? 'nome' : '');
-  });
+  const busca = document.getElementById('buscaProdutos');
+  const cat = document.getElementById('filtroCategoria');
+  const ordem = document.getElementById('ordenarPor');
+  const preco = document.getElementById('filtroPreco');
+  if (busca) busca.value = '';
+  if (cat) cat.value = '';
+  if (ordem) ordem.value = 'nome';
+  if (preco) preco.value = 1000;
   atualizarPrecoLabel();
   filtrarProdutos();
 }
 
 function abrirModalProduto() {
+  if (!isAdmin()) return alert('Apenas administrador!');
   document.getElementById('modalTitle').textContent = 'Novo Produto';
   document.getElementById('produtoId').value = '';
   document.getElementById('nomeProduto').value = '';
@@ -251,6 +319,7 @@ function abrirModalProduto() {
 }
 
 function editarProdutoById(id) {
+  if (!isAdmin()) return;
   const p = produtos.find(x => x.id == id);
   if (!p) return;
   document.getElementById('modalTitle').textContent = 'Editar Produto';
@@ -264,6 +333,7 @@ function editarProdutoById(id) {
 }
 
 async function salvarProduto() {
+  if (!isAdmin()) return;
   const nome = document.getElementById('nomeProduto').value.trim();
   const preco = parseFloat(document.getElementById('precoProduto').value);
   const estoque = parseInt(document.getElementById('estoqueProduto').value);
@@ -272,11 +342,8 @@ async function salvarProduto() {
   if (!nome || isNaN(preco) || isNaN(estoque)) return alert('Preencha os campos!');
   const id = document.getElementById('produtoId').value;
   try {
-    if (id) {
-      await api('/produtos/' + id, { method: 'PUT', body: JSON.stringify({ nome, categoria, preco, estoque, imagem }) });
-    } else {
-      await api('/produtos', { method: 'POST', body: JSON.stringify({ nome, categoria, preco, estoque, imagem }) });
-    }
+    if (id) await api('/produtos/' + id, { method: 'PUT', body: JSON.stringify({ nome, categoria, preco, estoque, imagem }) });
+    else await api('/produtos', { method: 'POST', body: JSON.stringify({ nome, categoria, preco, estoque, imagem }) });
     fecharModal('modalProduto');
     filtrarProdutos();
   } catch (e) { alert(e.message); }
@@ -416,4 +483,9 @@ async function gerarRelatorios() {
 
 document.addEventListener('click', e => {
   if (e.target.classList.contains('modal')) e.target.classList.remove('show');
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  atualizarHeaderAuth();
+  atualizarCarrinhoUI();
 });
