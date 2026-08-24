@@ -6,57 +6,38 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Banco de dados SQLite
 const db = new sqlite3.Database('./database.sqlite', (err) => {
-  if (err) {
-    console.error('Erro ao conectar no SQLite:', err.message);
-  } else {
+  if (err) console.error('Erro SQLite:', err.message);
+  else {
     console.log('✅ Conectado ao banco SQLite');
     initDatabase();
   }
 });
 
-// Criar tabelas e dados iniciais
 function initDatabase() {
   db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS produtos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT NOT NULL,
-      categoria TEXT NOT NULL,
-      preco REAL NOT NULL,
-      estoque INTEGER NOT NULL DEFAULT 0,
-      imagem TEXT DEFAULT '',
-      destaque INTEGER DEFAULT 0
+      nome TEXT NOT NULL, categoria TEXT NOT NULL, preco REAL NOT NULL,
+      estoque INTEGER NOT NULL DEFAULT 0, imagem TEXT DEFAULT '', destaque INTEGER DEFAULT 0
     )`);
-
     db.run(`CREATE TABLE IF NOT EXISTS clientes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT NOT NULL,
-      email TEXT NOT NULL,
-      telefone TEXT,
-      cidade TEXT
+      nome TEXT NOT NULL, email TEXT NOT NULL, telefone TEXT, cidade TEXT
     )`);
-
     db.run(`CREATE TABLE IF NOT EXISTS vendas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      cliente_id INTEGER NOT NULL,
-      data TEXT NOT NULL,
-      total REAL NOT NULL,
+      cliente_id INTEGER NOT NULL, data TEXT NOT NULL, total REAL NOT NULL,
       FOREIGN KEY (cliente_id) REFERENCES clientes(id)
     )`);
-
     db.run(`CREATE TABLE IF NOT EXISTS venda_itens (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      venda_id INTEGER NOT NULL,
-      produto_id INTEGER NOT NULL,
-      nome TEXT NOT NULL,
-      preco REAL NOT NULL,
-      quantidade INTEGER NOT NULL,
+      venda_id INTEGER NOT NULL, produto_id INTEGER NOT NULL,
+      nome TEXT NOT NULL, preco REAL NOT NULL, quantidade INTEGER NOT NULL,
       FOREIGN KEY (venda_id) REFERENCES vendas(id),
       FOREIGN KEY (produto_id) REFERENCES produtos(id)
     )`);
@@ -89,7 +70,6 @@ function initDatabase() {
           ['Camisa Ciclismo Manga Longa', 'Ciclismo', 189.90, 24, '', 0],
           ['Meião Futebol Nike Squad', 'Futebol', 59.90, 90, '', 0]
         ];
-
         const stmt = db.prepare('INSERT INTO produtos (nome, categoria, preco, estoque, imagem, destaque) VALUES (?, ?, ?, ?, ?, ?)');
         produtos.forEach(p => stmt.run(p));
         stmt.finalize();
@@ -115,22 +95,17 @@ function initDatabase() {
   });
 }
 
-// ==================== ROTAS API ====================
-
 app.get('/api/produtos', (req, res) => {
   const { categoria, busca, precoMax, ordem } = req.query;
   let sql = 'SELECT * FROM produtos WHERE 1=1';
   const params = [];
-
   if (categoria) { sql += ' AND categoria = ?'; params.push(categoria); }
-  if (busca) { sql += ' AND nome LIKE ?'; params.push(`%${busca}%`); }
+  if (busca) { sql += ' AND nome LIKE ?'; params.push('%' + busca + '%'); }
   if (precoMax) { sql += ' AND preco <= ?'; params.push(parseFloat(precoMax)); }
-
   if (ordem === 'preco-asc') sql += ' ORDER BY preco ASC';
   else if (ordem === 'preco-desc') sql += ' ORDER BY preco DESC';
   else if (ordem === 'estoque') sql += ' ORDER BY estoque DESC';
   else sql += ' ORDER BY nome ASC';
-
   db.all(sql, params, (err, rows) => {
     if (err) return res.status(500).json({ erro: err.message });
     res.json(rows);
@@ -147,37 +122,29 @@ app.get('/api/produtos/:id', (req, res) => {
 
 app.post('/api/produtos', (req, res) => {
   const { nome, categoria, preco, estoque, imagem, destaque } = req.body;
-  if (!nome || preco == null || estoque == null) {
-    return res.status(400).json({ erro: 'Nome, preço e estoque são obrigatórios' });
-  }
-  db.run(
-    'INSERT INTO produtos (nome, categoria, preco, estoque, imagem, destaque) VALUES (?, ?, ?, ?, ?, ?)',
+  if (!nome || preco == null || estoque == null) return res.status(400).json({ erro: 'Campos obrigatórios' });
+  db.run('INSERT INTO produtos (nome, categoria, preco, estoque, imagem, destaque) VALUES (?, ?, ?, ?, ?, ?)',
     [nome, categoria || 'Outros', preco, estoque, imagem || '', destaque ? 1 : 0],
     function (err) {
       if (err) return res.status(500).json({ erro: err.message });
-      res.status(201).json({ id: this.lastID, nome, categoria, preco, estoque, imagem, destaque });
-    }
-  );
+      res.status(201).json({ id: this.lastID, nome, categoria, preco, estoque });
+    });
 });
 
 app.put('/api/produtos/:id', (req, res) => {
   const { nome, categoria, preco, estoque, imagem, destaque } = req.body;
-  db.run(
-    'UPDATE produtos SET nome=?, categoria=?, preco=?, estoque=?, imagem=?, destaque=? WHERE id=?',
+  db.run('UPDATE produtos SET nome=?, categoria=?, preco=?, estoque=?, imagem=?, destaque=? WHERE id=?',
     [nome, categoria, preco, estoque, imagem || '', destaque ? 1 : 0, req.params.id],
     function (err) {
       if (err) return res.status(500).json({ erro: err.message });
-      if (this.changes === 0) return res.status(404).json({ erro: 'Produto não encontrado' });
-      res.json({ mensagem: 'Produto atualizado', id: req.params.id });
-    }
-  );
+      res.json({ mensagem: 'Atualizado' });
+    });
 });
 
 app.delete('/api/produtos/:id', (req, res) => {
   db.run('DELETE FROM produtos WHERE id = ?', [req.params.id], function (err) {
     if (err) return res.status(500).json({ erro: err.message });
-    if (this.changes === 0) return res.status(404).json({ erro: 'Produto não encontrado' });
-    res.json({ mensagem: 'Produto excluído' });
+    res.json({ mensagem: 'Excluído' });
   });
 });
 
@@ -190,52 +157,39 @@ app.get('/api/clientes', (req, res) => {
 
 app.post('/api/clientes', (req, res) => {
   const { nome, email, telefone, cidade } = req.body;
-  if (!nome || !email) return res.status(400).json({ erro: 'Nome e email são obrigatórios' });
-  db.run(
-    'INSERT INTO clientes (nome, email, telefone, cidade) VALUES (?, ?, ?, ?)',
+  if (!nome || !email) return res.status(400).json({ erro: 'Nome e email obrigatórios' });
+  db.run('INSERT INTO clientes (nome, email, telefone, cidade) VALUES (?, ?, ?, ?)',
     [nome, email, telefone || '', cidade || ''],
     function (err) {
       if (err) return res.status(500).json({ erro: err.message });
       res.status(201).json({ id: this.lastID, nome, email, telefone, cidade });
-    }
-  );
+    });
 });
 
 app.put('/api/clientes/:id', (req, res) => {
   const { nome, email, telefone, cidade } = req.body;
-  db.run(
-    'UPDATE clientes SET nome=?, email=?, telefone=?, cidade=? WHERE id=?',
+  db.run('UPDATE clientes SET nome=?, email=?, telefone=?, cidade=? WHERE id=?',
     [nome, email, telefone || '', cidade || '', req.params.id],
     function (err) {
       if (err) return res.status(500).json({ erro: err.message });
-      if (this.changes === 0) return res.status(404).json({ erro: 'Cliente não encontrado' });
-      res.json({ mensagem: 'Cliente atualizado' });
-    }
-  );
+      res.json({ mensagem: 'Atualizado' });
+    });
 });
 
 app.delete('/api/clientes/:id', (req, res) => {
   db.run('DELETE FROM clientes WHERE id = ?', [req.params.id], function (err) {
     if (err) return res.status(500).json({ erro: err.message });
-    if (this.changes === 0) return res.status(404).json({ erro: 'Cliente não encontrado' });
-    res.json({ mensagem: 'Cliente excluído' });
+    res.json({ mensagem: 'Excluído' });
   });
 });
 
 app.get('/api/vendas', (req, res) => {
-  const sql = `
-    SELECT v.*, c.nome as cliente_nome
-    FROM vendas v
-    LEFT JOIN clientes c ON c.id = v.cliente_id
-    ORDER BY v.id DESC
-  `;
-  db.all(sql, (err, vendas) => {
+  db.all(`SELECT v.*, c.nome as cliente_nome FROM vendas v LEFT JOIN clientes c ON c.id = v.cliente_id ORDER BY v.id DESC`, (err, vendas) => {
     if (err) return res.status(500).json({ erro: err.message });
-    if (vendas.length === 0) return res.json([]);
-
+    if (!vendas.length) return res.json([]);
     let pending = vendas.length;
     vendas.forEach((v, i) => {
-      db.all('SELECT * FROM venda_itens WHERE venda_id = ?', [v.id], (err2, itens) => {
+      db.all('SELECT * FROM venda_itens WHERE venda_id = ?', [v.id], (e2, itens) => {
         vendas[i].itens = itens || [];
         pending--;
         if (pending === 0) res.json(vendas);
@@ -246,100 +200,49 @@ app.get('/api/vendas', (req, res) => {
 
 app.post('/api/vendas', (req, res) => {
   const { cliente_id, itens } = req.body;
-
-  if (!cliente_id || !itens || itens.length === 0) {
-    return res.status(400).json({ erro: 'Cliente e itens são obrigatórios' });
-  }
-
-  let total = 0;
-  let checks = 0;
-  const erros = [];
-
+  if (!cliente_id || !itens || !itens.length) return res.status(400).json({ erro: 'Cliente e itens obrigatórios' });
+  let total = 0, checks = 0, erros = [];
   itens.forEach(item => {
     db.get('SELECT * FROM produtos WHERE id = ?', [item.produto_id], (err, prod) => {
       checks++;
-      if (!prod) {
-        erros.push(`Produto ID ${item.produto_id} não encontrado`);
-      } else if (prod.estoque < item.quantidade) {
-        erros.push(`Estoque insuficiente: ${prod.nome}`);
-      } else {
-        total += prod.preco * item.quantidade;
-        item.nome = prod.nome;
-        item.preco = prod.preco;
-      }
-
+      if (!prod) erros.push('Produto não encontrado');
+      else if (prod.estoque < item.quantidade) erros.push('Estoque insuficiente: ' + prod.nome);
+      else { total += prod.preco * item.quantidade; item.nome = prod.nome; item.preco = prod.preco; }
       if (checks === itens.length) {
-        if (erros.length > 0) {
-          return res.status(400).json({ erro: erros.join('; ') });
-        }
-
-        const frete = total >= 299 ? 0 : 19.90;
-        total += frete;
+        if (erros.length) return res.status(400).json({ erro: erros.join('; ') });
+        total += total >= 299 ? 0 : 19.90;
         const data = new Date().toISOString();
-
-        db.run(
-          'INSERT INTO vendas (cliente_id, data, total) VALUES (?, ?, ?)',
-          [cliente_id, data, total],
-          function (err) {
-            if (err) return res.status(500).json({ erro: err.message });
-
-            const vendaId = this.lastID;
-            const stmt = db.prepare(
-              'INSERT INTO venda_itens (venda_id, produto_id, nome, preco, quantidade) VALUES (?, ?, ?, ?, ?)'
-            );
-
-            itens.forEach(item => {
-              stmt.run(vendaId, item.produto_id, item.nome, item.preco, item.quantidade);
-              db.run('UPDATE produtos SET estoque = estoque - ? WHERE id = ?', [item.quantidade, item.produto_id]);
-            });
-            stmt.finalize();
-
-            res.status(201).json({
-              id: vendaId,
-              cliente_id,
-              data,
-              total,
-              itens,
-              mensagem: 'Venda realizada com sucesso!'
-            });
-          }
-        );
+        db.run('INSERT INTO vendas (cliente_id, data, total) VALUES (?, ?, ?)', [cliente_id, data, total], function (err) {
+          if (err) return res.status(500).json({ erro: err.message });
+          const vendaId = this.lastID;
+          const stmt = db.prepare('INSERT INTO venda_itens (venda_id, produto_id, nome, preco, quantidade) VALUES (?, ?, ?, ?, ?)');
+          itens.forEach(item => {
+            stmt.run(vendaId, item.produto_id, item.nome, item.preco, item.quantidade);
+            db.run('UPDATE produtos SET estoque = estoque - ? WHERE id = ?', [item.quantidade, item.produto_id]);
+          });
+          stmt.finalize();
+          res.status(201).json({ id: vendaId, total, mensagem: 'Venda OK' });
+        });
       }
     });
   });
 });
 
 app.get('/api/relatorios', (req, res) => {
-  const resultado = {};
-
+  const r = {};
   db.get('SELECT COUNT(*) as total, COALESCE(SUM(total),0) as faturamento FROM vendas', (err, row) => {
-    resultado.totalVendas = row ? row.total : 0;
-    resultado.faturamento = row ? row.faturamento : 0;
-    resultado.ticketMedio = resultado.totalVendas > 0 ? resultado.faturamento / resultado.totalVendas : 0;
-
-    db.get('SELECT COALESCE(SUM(quantidade),0) as itens FROM venda_itens', (err2, row2) => {
-      resultado.itensVendidos = row2 ? row2.itens : 0;
-
-      db.all(`
-        SELECT p.categoria, COALESCE(SUM(vi.preco * vi.quantidade),0) as total
-        FROM venda_itens vi
-        JOIN produtos p ON p.id = vi.produto_id
-        GROUP BY p.categoria
-      `, (err3, cats) => {
-        resultado.porCategoria = cats || [];
-
-        db.all(`
-          SELECT nome, SUM(quantidade) as qtd
-          FROM venda_itens
-          GROUP BY nome
-          ORDER BY qtd DESC
-          LIMIT 5
-        `, (err4, top) => {
-          resultado.topProdutos = top || [];
-
-          db.all('SELECT id, nome, categoria, estoque FROM produtos ORDER BY estoque ASC', (err5, estoque) => {
-            resultado.estoque = estoque || [];
-            res.json(resultado);
+    r.totalVendas = row ? row.total : 0;
+    r.faturamento = row ? row.faturamento : 0;
+    r.ticketMedio = r.totalVendas > 0 ? r.faturamento / r.totalVendas : 0;
+    db.get('SELECT COALESCE(SUM(quantidade),0) as itens FROM venda_itens', (e2, row2) => {
+      r.itensVendidos = row2 ? row2.itens : 0;
+      db.all('SELECT p.categoria, COALESCE(SUM(vi.preco * vi.quantidade),0) as total FROM venda_itens vi JOIN produtos p ON p.id = vi.produto_id GROUP BY p.categoria', (e3, cats) => {
+        r.porCategoria = cats || [];
+        db.all('SELECT nome, SUM(quantidade) as qtd FROM venda_itens GROUP BY nome ORDER BY qtd DESC LIMIT 5', (e4, top) => {
+          r.topProdutos = top || [];
+          db.all('SELECT id, nome, categoria, estoque FROM produtos ORDER BY estoque ASC', (e5, estoque) => {
+            r.estoque = estoque || [];
+            res.json(r);
           });
         });
       });
@@ -347,13 +250,12 @@ app.get('/api/relatorios', (req, res) => {
   });
 });
 
+// Página inicial = login
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// IMPORTANTE: 0.0.0.0 faz a porta funcionar no Codespaces
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🚀 SportMax rodando na porta ${PORT}`);
-  console.log(`📦 Abra a porta ${PORT} no painel PORTS do Codespaces`);
-  console.log(`🌐 API: /api/produtos | /api/clientes | /api/vendas\n`);
+  console.log('\n🚀 SportMax na porta ' + PORT);
+  console.log('🔐 Abra e faça login (Admin senha: 1111)\n');
 });
