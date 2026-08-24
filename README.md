@@ -1,76 +1,74 @@
 # ⚡ SportMax — Loja Esportiva
 
-Site profissional de e-commerce esportivo com área de administração.
+Sistema completo de loja esportiva com **Node.js + Express + SQLite**.
 
-## 🛒 Funcionalidades da Loja
+## 🛠️ Stack
 
-- **Home** com hero, categorias e produtos em destaque
-- **Catálogo** com filtros por categoria, preço e ordenação
-- **Carrinho de compras** completo (adicionar, alterar qtd, remover)
-- **Frete grátis** acima de R$ 299
-- **Checkout** com seleção de cliente e baixa automática de estoque
+- **Frontend:** HTML, CSS, JavaScript
+- **Backend:** Node.js + Express
+- **Banco de dados:** SQLite3
 
-## 🛠️ Área Admin
+## 🚀 Como rodar no Codespaces
 
-- Gestão de **Produtos** (CRUD)
-- Gestão de **Clientes**
-- **Histórico de Vendas**
-- **Relatórios** com gráficos (Chart.js)
+1. Abra o Codespace do repositório `loja-esportiva`
+2. No terminal, rode **apenas isto**:
 
-## 📦 24 produtos de exemplo
+```bash
+npm install
+node server.js
+```
 
-Futebol, Corrida, Fitness, Basquete, Tênis, Natação e Ciclismo.
+3. Clique em **Open in Browser** na porta **3000**
 
-## 💾 Banco de Dados
+Pronto! O site e a API estarão rodando.
 
-Dados salvos no **localStorage** do navegador:
-- `sportmax_produtos`
-- `sportmax_clientes`
-- `sportmax_vendas`
-- `sportmax_carrinho`
+### Comandos que você citou (equivalente)
 
-## 🚀 Como usar
+```bash
+node -v                  # ver versão do Node (já vem instalado)
+npm install              # instala express, sqlite3 e cors
+node server.js           # inicia o servidor
+```
 
-### Opção 1 — GitHub Pages
-1. Settings → Pages → Deploy from branch → `main`
-2. Acesse: https://tavares-12.github.io/loja-esportiva/
+> Não precisa de `npm init -y` nem instalar pacote por pacote — o `package.json` já está pronto.
 
-### Opção 2 — GitHub Codespaces
-1. No repositório, clique em **Code** → **Codespaces** → **Create codespace on main**
-2. Aguarde o ambiente carregar (já vem com Live Server)
-3. Abra o arquivo `index.html`
-4. Clique com o botão direito → **Open with Live Server**  
-   ou no terminal:
-   ```bash
-   live-server --port=5500
-   ```
-5. O site abre automaticamente no navegador
+## 📡 API
 
-### Opção 3 — Local
-Abra o arquivo `index.html` diretamente no navegador.
+| Método | Rota | Descrição |
+|--------|------|-----------|
+| GET | `/api/produtos` | Listar produtos |
+| POST | `/api/produtos` | Criar produto |
+| PUT | `/api/produtos/:id` | Editar produto |
+| DELETE | `/api/produtos/:id` | Excluir produto |
+| GET | `/api/clientes` | Listar clientes |
+| POST | `/api/clientes` | Criar cliente |
+| GET | `/api/vendas` | Listar vendas |
+| POST | `/api/vendas` | Nova venda |
+| GET | `/api/relatorios` | Dados de relatório |
 
-## 📁 Arquivos
+## 📁 Estrutura
 
 ```
-├── index.html          → Home da loja
-├── produtos.html       → Catálogo + Admin produtos
-├── carrinho.html       → Carrinho e checkout
-├── clientes.html       → Gestão de clientes
-├── vendas.html         → Histórico de vendas
-├── relatorios.html     → Relatórios e gráficos
-├── styles.css
-├── script.js
-├── .devcontainer/      → Configuração do Codespaces
+loja-esportiva/
+├── server.js              → Backend Express + SQLite
+├── package.json           → Dependências
+├── database.sqlite        → Criado automaticamente ao rodar
+├── public/                → Frontend (HTML/CSS/JS)
+│   ├── index.html
+│   ├── produtos.html
+│   ├── carrinho.html
+│   ├── clientes.html
+│   ├── vendas.html
+│   ├── relatorios.html
+│   ├── styles.css
+│   └── script.js
+├── .devcontainer/         → Config Codespaces
 └── README.md
 ```
 
-## 🔄 Atualizar no Codespaces
+## 📦 24 produtos de exemplo
 
-Se o Codespace já estiver aberto e o código no GitHub mudou:
-
-```bash
-git pull origin main
-```
+Já vêm cadastrados no banco na primeira execução.
 
 ---
 

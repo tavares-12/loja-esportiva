@@ -1,24 +1,22 @@
 {
   "name": "SportMax Loja Esportiva",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
-  "forwardPorts": [5500, 3000, 8080],
+  "forwardPorts": [3000],
   "portsAttributes": {
-    "5500": { "label": "Live Server", "onAutoForward": "notify" },
-    "3000": { "label": "Preview", "onAutoForward": "notify" },
-    "8080": { "label": "HTTP Server", "onAutoForward": "notify" }
+    "3000": {
+      "label": "SportMax Server",
+      "onAutoForward": "notify"
+    }
   },
-  "postCreateCommand": "npm install -g live-server 2>/dev/null || true",
+  "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
       "extensions": [
-        "ritwickdey.LiveServer",
+        "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "formulahendry.auto-rename-tag",
-        "christian-kohler.path-intellisense"
+        "formulahendry.auto-rename-tag"
       ],
       "settings": {
-        "liveServer.settings.port": 5500,
-        "liveServer.settings.root": "/",
         "editor.formatOnSave": true,
         "files.autoSave": "afterDelay"
       }
