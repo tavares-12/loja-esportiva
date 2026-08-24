@@ -3,77 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SportMax | Loja Esportiva</title>
-    <script src="auth.js"></script>
+    <title>SportMax | Início</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <div class="top-bar">
-        <div class="container-fluid">
-            <span><i class="fas fa-truck"></i> Frete grátis acima de R$ 299</span>
-            <span><i class="fas fa-shield-alt"></i> Compra 100% segura</span>
-            <span id="userInfo"></span>
+
+<!-- ========== CABEÇALHO (IGUAL EM TODAS AS PÁGINAS) ========== -->
+<div class="top-bar">
+    <div class="container-fluid">
+        <span><i class="fas fa-truck"></i> Frete grátis acima de R$ 299</span>
+        <span><i class="fas fa-shield-alt"></i> Compra 100% segura</span>
+        <span id="userInfo"></span>
+    </div>
+</div>
+<header class="main-header">
+    <div class="header-inner">
+        <a href="index.html" class="logo">
+            <i class="fas fa-bolt"></i>
+            <div><strong>SportMax</strong><small>Loja Esportiva</small></div>
+        </a>
+        <div class="search-box">
+            <input type="text" placeholder="Buscar produtos...">
+            <button type="button" onclick="location.href='produtos.html'"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="header-actions">
+            <a href="carrinho.html" class="header-btn cart-btn">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+                <span>Carrinho</span>
+            </a>
+            <a href="login.html" class="header-btn"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a>
         </div>
     </div>
-    <header class="main-header">
-        <div class="header-inner">
-            <a href="index.html" class="logo"><i class="fas fa-bolt"></i><div><strong>SportMax</strong><small>Loja Esportiva</small></div></a>
-            <div class="search-box">
-                <input type="text" placeholder="Buscar produtos...">
-                <button type="button" onclick="location.href='produtos.html'"><i class="fas fa-search"></i></button>
-            </div>
-            <div class="header-actions">
-                <a href="carrinho.html" class="header-btn cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-count" id="cartCount">0</span><span>Carrinho</span></a>
-                <a href="#" class="header-btn" onclick="sair();return false;"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a>
-            </div>
-        </div>
-    </header>
-    <nav class="main-nav">
-        <div class="nav-inner">
-            <a href="index.html" class="active"><i class="fas fa-home"></i> Início</a>
-            <a href="produtos.html"><i class="fas fa-th-large"></i> Produtos</a>
-            <a href="carrinho.html"><i class="fas fa-shopping-bag"></i> Carrinho</a>
-            <a href="vendas.html" class="admin-only"><i class="fas fa-cash-register"></i> Vendas</a>
-            <a href="relatorios.html" class="admin-only"><i class="fas fa-chart-line"></i> Relatórios</a>
-        </div>
-    </nav>
+</header>
+<nav class="main-nav">
+    <div class="nav-inner">
+        <a href="index.html" class="active"><i class="fas fa-home"></i> Início</a>
+        <a href="produtos.html"><i class="fas fa-th-large"></i> Produtos</a>
+        <a href="carrinho.html"><i class="fas fa-shopping-bag"></i> Carrinho</a>
+        <a href="vendas.html"><i class="fas fa-cash-register"></i> Vendas</a>
+        <a href="relatorios.html"><i class="fas fa-chart-line"></i> Relatórios</a>
+    </div>
+</nav>
+<!-- ========== FIM DO CABEÇALHO ========== -->
 
-    <section class="hero">
-        <div class="hero-content">
-            <span class="hero-badge">Nova Coleção 2026</span>
-            <h1>Equipamentos de<br><span>Alto Desempenho</span></h1>
-            <p>Tênis, camisas oficiais, bolas e equipamentos das melhores marcas.</p>
-            <div class="hero-btns"><a href="produtos.html" class="btn btn-primary btn-lg">Ver Produtos</a></div>
-        </div>
-        <div class="hero-visual"><div class="hero-card"><i class="fas fa-percentage"></i><strong>Até 40% OFF</strong><span>Em selecionados</span></div></div>
-    </section>
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-badge">Nova Coleção 2026</span>
+        <h1>Equipamentos de<br><span>Alto Desempenho</span></h1>
+        <p>Tênis, camisas oficiais, bolas e equipamentos das melhores marcas.</p>
+        <div class="hero-btns"><a href="produtos.html" class="btn btn-primary btn-lg">Ver Produtos</a></div>
+    </div>
+</section>
 
-    <section class="section">
-        <div class="container">
-            <div class="section-header"><h2>Categorias</h2><a href="produtos.html">Ver todos →</a></div>
-            <div class="categories-grid" id="categoriasGrid"></div>
-        </div>
-    </section>
+<section class="section">
+    <div class="container">
+        <div class="section-header"><h2>Categorias</h2><a href="produtos.html">Ver todos →</a></div>
+        <div class="categories-grid" id="categoriasGrid"></div>
+    </div>
+</section>
 
-    <section class="section bg-light">
-        <div class="container">
-            <div class="section-header"><h2>Destaques</h2><a href="produtos.html">Ver todos →</a></div>
-            <div class="products-grid" id="destaquesGrid"></div>
-        </div>
-    </section>
+<section class="section bg-light">
+    <div class="container">
+        <div class="section-header"><h2>Destaques</h2><a href="produtos.html">Ver todos →</a></div>
+        <div class="products-grid" id="destaquesGrid"></div>
+    </div>
+</section>
 
-    <footer class="main-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 SportMax</p></div></div></footer>
+<footer class="main-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 SportMax</p></div></div></footer>
 
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-            await carregarDadosIniciais();
-            atualizarCarrinhoUI();
-            atualizarHeaderAuth();
-            renderCategorias();
-            renderDestaques();
-        });
-    </script>
+<script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+    await carregarDadosIniciais();
+    atualizarCarrinhoUI();
+    if (typeof atualizarHeaderAuth === 'function') atualizarHeaderAuth();
+    renderCategorias();
+    renderDestaques();
+});
+</script>
 </body>
 </html>
