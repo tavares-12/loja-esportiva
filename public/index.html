@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SportMax | Loja Esportiva</title>
+    <script src="auth.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -15,30 +16,19 @@
             <span id="userInfo"></span>
         </div>
     </div>
-
     <header class="main-header">
         <div class="header-inner">
-            <a href="index.html" class="logo">
-                <i class="fas fa-bolt"></i>
-                <div><strong>SportMax</strong><small>Loja Esportiva</small></div>
-            </a>
+            <a href="index.html" class="logo"><i class="fas fa-bolt"></i><div><strong>SportMax</strong><small>Loja Esportiva</small></div></a>
             <div class="search-box">
                 <input type="text" placeholder="Buscar produtos...">
                 <button type="button" onclick="location.href='produtos.html'"><i class="fas fa-search"></i></button>
             </div>
             <div class="header-actions">
-                <a href="carrinho.html" class="header-btn cart-btn">
-                    <i class="fas fa-shopping-bag"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                    <span>Carrinho</span>
-                </a>
-                <a href="#" class="header-btn" onclick="sair();return false;" title="Sair">
-                    <i class="fas fa-sign-out-alt"></i> <span>Sair</span>
-                </a>
+                <a href="carrinho.html" class="header-btn cart-btn"><i class="fas fa-shopping-bag"></i><span class="cart-count" id="cartCount">0</span><span>Carrinho</span></a>
+                <a href="#" class="header-btn" onclick="sair();return false;"><i class="fas fa-sign-out-alt"></i> <span>Sair</span></a>
             </div>
         </div>
     </header>
-
     <nav class="main-nav">
         <div class="nav-inner">
             <a href="index.html" class="active"><i class="fas fa-home"></i> Início</a>
@@ -54,17 +44,9 @@
             <span class="hero-badge">Nova Coleção 2026</span>
             <h1>Equipamentos de<br><span>Alto Desempenho</span></h1>
             <p>Tênis, camisas oficiais, bolas e equipamentos das melhores marcas.</p>
-            <div class="hero-btns">
-                <a href="produtos.html" class="btn btn-primary btn-lg">Ver Produtos</a>
-            </div>
+            <div class="hero-btns"><a href="produtos.html" class="btn btn-primary btn-lg">Ver Produtos</a></div>
         </div>
-        <div class="hero-visual">
-            <div class="hero-card">
-                <i class="fas fa-percentage"></i>
-                <strong>Até 40% OFF</strong>
-                <span>Em selecionados</span>
-            </div>
-        </div>
+        <div class="hero-visual"><div class="hero-card"><i class="fas fa-percentage"></i><strong>Até 40% OFF</strong><span>Em selecionados</span></div></div>
     </section>
 
     <section class="section">
@@ -81,13 +63,11 @@
         </div>
     </section>
 
-    <footer class="main-footer">
-        <div class="container"><div class="footer-bottom"><p>&copy; 2026 SportMax</p></div></div>
-    </footer>
+    <footer class="main-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 SportMax</p></div></div></footer>
 
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', async function() {
             await carregarDadosIniciais();
             atualizarCarrinhoUI();
             atualizarHeaderAuth();
