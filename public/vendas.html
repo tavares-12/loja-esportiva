@@ -8,19 +8,55 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+    <!-- CABEÇALHO PADRÃO -->
+    <div class="top-bar">
+        <div class="container-fluid">
+            <span><i class="fas fa-truck"></i> Frete grátis acima de R$ 299</span>
+            <span><i class="fas fa-shield-alt"></i> Compra 100% segura</span>
+            <span><i class="fas fa-headset"></i> Atendimento 7 dias</span>
+        </div>
+    </div>
+
     <header class="main-header">
         <div class="header-inner">
-            <a href="index.html" class="logo"><i class="fas fa-bolt"></i><div><strong>SportMax</strong><small>Admin</small></div></a>
-            <div class="header-actions"><a href="index.html" class="header-btn"><i class="fas fa-store"></i> Ver Loja</a></div>
+            <a href="index.html" class="logo">
+                <i class="fas fa-bolt"></i>
+                <div>
+                    <strong>SportMax</strong>
+                    <small>Loja Esportiva</small>
+                </div>
+            </a>
+            <div class="search-box">
+                <input type="text" placeholder="Buscar produtos...">
+                <button type="button" onclick="location.href='produtos.html'"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="header-actions">
+                <a href="clientes.html" class="header-btn" title="Área Admin">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Admin</span>
+                </a>
+                <a href="carrinho.html" class="header-btn cart-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                    <span>Carrinho</span>
+                </a>
+            </div>
         </div>
     </header>
-    <nav class="main-nav"><div class="nav-inner">
-        <a href="index.html"><i class="fas fa-home"></i> Loja</a>
-        <a href="produtos.html"><i class="fas fa-box"></i> Produtos</a>
-        <a href="clientes.html"><i class="fas fa-users"></i> Clientes</a>
-        <a href="vendas.html" class="active"><i class="fas fa-cash-register"></i> Vendas</a>
-        <a href="relatorios.html"><i class="fas fa-chart-line"></i> Relatórios</a>
-    </div></nav>
+
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="index.html"><i class="fas fa-home"></i> Início</a>
+            <a href="produtos.html"><i class="fas fa-th-large"></i> Produtos</a>
+            <a href="carrinho.html"><i class="fas fa-shopping-bag"></i> Carrinho</a>
+            <a href="contato.html"><i class="fas fa-envelope"></i> Contato</a>
+            <a href="clientes.html"><i class="fas fa-users"></i> Clientes</a>
+            <a href="vendas.html" class="active"><i class="fas fa-cash-register"></i> Vendas</a>
+            <a href="relatorios.html"><i class="fas fa-chart-line"></i> Relatórios</a>
+        </div>
+    </nav>
+    <!-- FIM CABEÇALHO -->
+
     <main class="container page-content">
         <div class="card">
             <div class="card-header">
@@ -29,14 +65,25 @@
             </div>
             <div class="table-responsive">
                 <table id="tabelaVendas">
-                    <thead><tr><th>ID</th><th>Data</th><th>Cliente</th><th>Itens</th><th>Total</th></tr></thead>
+                    <thead>
+                        <tr><th>ID</th><th>Data</th><th>Cliente</th><th>Itens</th><th>Total</th></tr>
+                    </thead>
                     <tbody></tbody>
                 </table>
             </div>
         </div>
     </main>
-    <footer class="main-footer"><div class="container"><div class="footer-bottom"><p>&copy; 2026 SportMax</p></div></div></footer>
+
+    <footer class="main-footer">
+        <div class="container"><div class="footer-bottom"><p>&copy; 2026 SportMax</p></div></div>
+    </footer>
+
     <script src="script.js"></script>
-    <script>document.addEventListener('DOMContentLoaded', () => carregarHistoricoVendas());</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarCarrinhoUI();
+            carregarHistoricoVendas();
+        });
+    </script>
 </body>
 </html>
