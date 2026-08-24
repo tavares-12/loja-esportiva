@@ -31,23 +31,45 @@ Dados salvos no **localStorage** do navegador:
 
 ## 🚀 Como usar
 
-1. Abra `index.html` no navegador **ou**
-2. Ative o **GitHub Pages**:
-   - Settings → Pages → Deploy from branch → `main`
-   - Acesse: https://tavares-12.github.io/loja-esportiva/
+### Opção 1 — GitHub Pages
+1. Settings → Pages → Deploy from branch → `main`
+2. Acesse: https://tavares-12.github.io/loja-esportiva/
+
+### Opção 2 — GitHub Codespaces
+1. No repositório, clique em **Code** → **Codespaces** → **Create codespace on main**
+2. Aguarde o ambiente carregar (já vem com Live Server)
+3. Abra o arquivo `index.html`
+4. Clique com o botão direito → **Open with Live Server**  
+   ou no terminal:
+   ```bash
+   live-server --port=5500
+   ```
+5. O site abre automaticamente no navegador
+
+### Opção 3 — Local
+Abra o arquivo `index.html` diretamente no navegador.
 
 ## 📁 Arquivos
 
 ```
-├── index.html       → Home da loja
-├── produtos.html    → Catálogo + Admin produtos
-├── carrinho.html    → Carrinho e checkout
-├── clientes.html    → Gestão de clientes
-├── vendas.html      → Histórico de vendas
-├── relatorios.html  → Relatórios e gráficos
+├── index.html          → Home da loja
+├── produtos.html       → Catálogo + Admin produtos
+├── carrinho.html       → Carrinho e checkout
+├── clientes.html       → Gestão de clientes
+├── vendas.html         → Histórico de vendas
+├── relatorios.html     → Relatórios e gráficos
 ├── styles.css
 ├── script.js
+├── .devcontainer/      → Configuração do Codespaces
 └── README.md
+```
+
+## 🔄 Atualizar no Codespaces
+
+Se o Codespace já estiver aberto e o código no GitHub mudou:
+
+```bash
+git pull origin main
 ```
 
 ---
