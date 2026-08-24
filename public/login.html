@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar | SportMax</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
+            padding: 1.5rem;
+        }
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+        .login-box .logo-big {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .login-box .logo-big i {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .login-box h1 {
+            text-align: center;
+            font-size: 1.6rem;
+            color: #1e293b;
+            margin-bottom: 0.3rem;
+        }
+        .login-box .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .role-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .role-btn {
+            border: 2px solid #e2e8f0;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.2rem 0.8rem;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.2s;
+        }
+        .role-btn:hover, .role-btn.active {
+            border-color: #0ea5e9;
+            background: #e0f2fe;
+        }
+        .role-btn i { font-size: 1.8rem; color: #0ea5e9; display: block; margin-bottom: 0.5rem; }
+        .role-btn strong { display: block; color: #1e293b; font-size: 0.95rem; }
+        .role-btn span { font-size: 0.75rem; color: #64748b; }
+        .admin-form { display: none; }
+        .admin-form.show { display: block; }
+        .login-links {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+        .login-links a { color: #0ea5e9; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="login-box">
+            <div class="logo-big">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <h1>SportMax</h1>
+            <p class="subtitle">Escolha como deseja entrar</p>
+
+            <div class="role-btns">
+                <div class="role-btn" id="btnComprador" onclick="escolherTipo('comprador')">
+                    <i class="fas fa-shopping-bag"></i>
+                    <strong>Comprador</strong>
+                    <span>Comprar produtos</span>
+                </div>
+                <div class="role-btn" id="btnAdmin" onclick="escolherTipo('admin')">
+                    <i class="fas fa-user-shield"></i>
+                    <strong>Administrador</strong>
+                    <span>Área restrita</span>
+                </div>
+            </div>
+
+            <!-- Formulário Admin -->
+            <div class="admin-form" id="adminForm">
+                <div class="form-group">
+                    <label>Senha do Administrador</label>
+                    <input type="password" id="senhaAdmin" placeholder="Digite a senha" maxlength="20">
+                </div>
+                <button class="btn btn-primary btn-lg btn-block" onclick="entrarAdmin()">
+                    <i class="fas fa-lock"></i> Entrar como Admin
+                </button>
+            </div>
+
+            <!-- Botão Comprador -->
+            <div id="compradorForm" style="display:none;">
+                <button class="btn btn-primary btn-lg btn-block" onclick="entrarComprador()">
+                    <i class="fas fa-sign-in-alt"></i> Entrar na Loja
+                </button>
+            </div>
+
+            <div class="login-links">
+                Novo por aqui? <a href="cadastro.html">Cadastre-se</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Se já estiver logado, redireciona
+        const sessao = JSON.parse(localStorage.getItem('sportmax_sessao') || 'null');
+        if (sessao && sessao.tipo) {
+            window.location.href = 'index.html';
+        }
+
+        let tipoEscolhido = null;
+
+        function escolherTipo(tipo) {
+            tipoEscolhido = tipo;
+            document.getElementById('btnComprador').classList.toggle('active', tipo === 'comprador');
+            document.getElementById('btnAdmin').classList.toggle('active', tipo === 'admin');
+            document.getElementById('adminForm').classList.toggle('show', tipo === 'admin');
+            document.getElementById('compradorForm').style.display = tipo === 'comprador' ? 'block' : 'none';
+        }
+
+        function entrarAdmin() {
+            const senha = document.getElementById('senhaAdmin').value;
+            if (senha === '1111') {
+                localStorage.setItem('sportmax_sessao', JSON.stringify({
+                    tipo: 'admin',
+                    nome: 'Administrador',
+                    hora: new Date().toISOString()
+                }));
+                window.location.href = 'index.html';
+            } else {
+                alert('Senha incorreta! Apenas o dono pode acessar.');
+                document.getElementById('senhaAdmin').value = '';
+                document.getElementById('senhaAdmin').focus();
+            }
+        }
+
+        function entrarComprador() {
+            // Verifica se tem usuário cadastrado logado, senão entra como visitante comprador
+            const user = JSON.parse(localStorage.getItem('sportmax_usuario') || 'null');
+            localStorage.setItem('sportmax_sessao', JSON.stringify({
+                tipo: 'comprador',
+                nome: user ? user.nome : 'Visitante',
+                email: user ? user.email : null,
+                hora: new Date().toISOString()
+            }));
+            window.location.href = 'index.html';
+        }
+
+        // Enter no campo senha
+        document.getElementById('senhaAdmin')?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') entrarAdmin();
+        });
+    </script>
+</body>
+</html>
