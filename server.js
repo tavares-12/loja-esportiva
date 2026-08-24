@@ -24,7 +24,6 @@ const db = new sqlite3.Database('./database.sqlite', (err) => {
 // Criar tabelas e dados iniciais
 function initDatabase() {
   db.serialize(() => {
-    // Tabela produtos
     db.run(`CREATE TABLE IF NOT EXISTS produtos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL,
@@ -35,7 +34,6 @@ function initDatabase() {
       destaque INTEGER DEFAULT 0
     )`);
 
-    // Tabela clientes
     db.run(`CREATE TABLE IF NOT EXISTS clientes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nome TEXT NOT NULL,
@@ -44,7 +42,6 @@ function initDatabase() {
       cidade TEXT
     )`);
 
-    // Tabela vendas
     db.run(`CREATE TABLE IF NOT EXISTS vendas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       cliente_id INTEGER NOT NULL,
@@ -53,7 +50,6 @@ function initDatabase() {
       FOREIGN KEY (cliente_id) REFERENCES clientes(id)
     )`);
 
-    // Tabela itens da venda
     db.run(`CREATE TABLE IF NOT EXISTS venda_itens (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       venda_id INTEGER NOT NULL,
@@ -65,7 +61,6 @@ function initDatabase() {
       FOREIGN KEY (produto_id) REFERENCES produtos(id)
     )`);
 
-    // Inserir produtos se estiver vazio
     db.get('SELECT COUNT(*) as total FROM produtos', (err, row) => {
       if (!err && row.total === 0) {
         const produtos = [
@@ -102,7 +97,6 @@ function initDatabase() {
       }
     });
 
-    // Inserir clientes se estiver vazio
     db.get('SELECT COUNT(*) as total FROM clientes', (err, row) => {
       if (!err && row.total === 0) {
         const clientes = [
@@ -123,24 +117,14 @@ function initDatabase() {
 
 // ==================== ROTAS API ====================
 
-// --- PRODUTOS ---
 app.get('/api/produtos', (req, res) => {
   const { categoria, busca, precoMax, ordem } = req.query;
   let sql = 'SELECT * FROM produtos WHERE 1=1';
   const params = [];
 
-  if (categoria) {
-    sql += ' AND categoria = ?';
-    params.push(categoria);
-  }
-  if (busca) {
-    sql += ' AND nome LIKE ?';
-    params.push(`%${busca}%`);
-  }
-  if (precoMax) {
-    sql += ' AND preco <= ?';
-    params.push(parseFloat(precoMax));
-  }
+  if (categoria) { sql += ' AND categoria = ?'; params.push(categoria); }
+  if (busca) { sql += ' AND nome LIKE ?'; params.push(`%${busca}%`); }
+  if (precoMax) { sql += ' AND preco <= ?'; params.push(parseFloat(precoMax)); }
 
   if (ordem === 'preco-asc') sql += ' ORDER BY preco ASC';
   else if (ordem === 'preco-desc') sql += ' ORDER BY preco DESC';
@@ -197,7 +181,6 @@ app.delete('/api/produtos/:id', (req, res) => {
   });
 });
 
-// --- CLIENTES ---
 app.get('/api/clientes', (req, res) => {
   db.all('SELECT * FROM clientes ORDER BY nome', (err, rows) => {
     if (err) return res.status(500).json({ erro: err.message });
@@ -239,7 +222,6 @@ app.delete('/api/clientes/:id', (req, res) => {
   });
 });
 
-// --- VENDAS ---
 app.get('/api/vendas', (req, res) => {
   const sql = `
     SELECT v.*, c.nome as cliente_nome
@@ -249,8 +231,6 @@ app.get('/api/vendas', (req, res) => {
   `;
   db.all(sql, (err, vendas) => {
     if (err) return res.status(500).json({ erro: err.message });
-
-    // Buscar itens de cada venda
     if (vendas.length === 0) return res.json([]);
 
     let pending = vendas.length;
@@ -271,7 +251,6 @@ app.post('/api/vendas', (req, res) => {
     return res.status(400).json({ erro: 'Cliente e itens são obrigatórios' });
   }
 
-  // Verificar estoque e calcular total
   let total = 0;
   let checks = 0;
   const erros = [];
@@ -294,10 +273,8 @@ app.post('/api/vendas', (req, res) => {
           return res.status(400).json({ erro: erros.join('; ') });
         }
 
-        // Frete
         const frete = total >= 299 ? 0 : 19.90;
         total += frete;
-
         const data = new Date().toISOString();
 
         db.run(
@@ -313,7 +290,6 @@ app.post('/api/vendas', (req, res) => {
 
             itens.forEach(item => {
               stmt.run(vendaId, item.produto_id, item.nome, item.preco, item.quantidade);
-              // Baixar estoque
               db.run('UPDATE produtos SET estoque = estoque - ? WHERE id = ?', [item.quantidade, item.produto_id]);
             });
             stmt.finalize();
@@ -333,7 +309,6 @@ app.post('/api/vendas', (req, res) => {
   });
 });
 
-// --- RELATÓRIOS ---
 app.get('/api/relatorios', (req, res) => {
   const resultado = {};
 
@@ -372,15 +347,13 @@ app.get('/api/relatorios', (req, res) => {
   });
 });
 
-// Rota raiz → frontend
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`\n🚀 SportMax rodando em http://localhost:${PORT}`);
-  console.log(`📦 API: http://localhost:${PORT}/api/produtos`);
-  console.log(`👥 API: http://localhost:${PORT}/api/clientes`);
-  console.log(`💰 API: http://localhost:${PORT}/api/vendas\n`);
+// IMPORTANTE: 0.0.0.0 faz a porta funcionar no Codespaces
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🚀 SportMax rodando na porta ${PORT}`);
+  console.log(`📦 Abra a porta ${PORT} no painel PORTS do Codespaces`);
+  console.log(`🌐 API: /api/produtos | /api/clientes | /api/vendas\n`);
 });
