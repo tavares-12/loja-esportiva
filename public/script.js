@@ -1,4 +1,4 @@
-// SportMax - Frontend com API + autenticação
+// SportMax - Frontend com API
 const API = '/api';
 let produtos = [];
 let clientes = [];
@@ -151,7 +151,7 @@ async function carregarClientesCheckout() {
 async function finalizarCompra() {
   if (carrinho.length === 0) return alert('Carrinho vazio!');
   var clienteId = document.getElementById('clienteCheckout') && document.getElementById('clienteCheckout').value;
-  if (!clienteId) return alert('Selecione um cliente!');
+  if (!clienteId) return alert('Selecione um cliente! Ou cadastre um novo.');
   try {
     var result = await api('/vendas', {
       method: 'POST',
@@ -163,10 +163,87 @@ async function finalizarCompra() {
     carrinho = [];
     salvarCarrinho();
     atualizarCarrinhoUI();
-    alert('Compra finalizada! Total: ' + formatarMoeda(result.total));
-    window.location.href = 'index.html';
+    // Guarda total e vai para página de feedback
+    sessionStorage.setItem('sportmax_ultima_compra', formatarMoeda(result.total));
+    window.location.href = 'feedback.html';
   } catch (e) {
     alert('Erro: ' + e.message);
+  }
+}
+
+// ---------- CLIENTES ----------
+async function carregarClientes() {
+  var tbody = document.querySelector('#tabelaClientes tbody');
+  if (!tbody) return;
+  try { clientes = await api('/clientes'); } catch(e) { clientes = []; }
+  tbody.innerHTML = '';
+  if (!clientes.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:2rem">Nenhum cliente. Clique em Novo Cliente.</td></tr>';
+    return;
+  }
+  clientes.forEach(function(c, i) {
+    tbody.innerHTML += '<tr>' +
+      '<td>' + c.id + '</td>' +
+      '<td><strong>' + c.nome + '</strong></td>' +
+      '<td>' + c.email + '</td>' +
+      '<td>' + (c.telefone || '-') + '</td>' +
+      '<td>' + (c.cidade || '-') + '</td>' +
+      '<td>' +
+        '<button class="btn btn-primary btn-sm" onclick="editarCliente(' + i + ')"><i class="fas fa-edit"></i></button> ' +
+        '<button class="btn btn-danger btn-sm" onclick="excluirCliente(' + c.id + ')"><i class="fas fa-trash"></i></button>' +
+      '</td></tr>';
+  });
+}
+
+function abrirModalCliente() {
+  document.getElementById('modalClienteTitle').textContent = 'Novo Cliente';
+  document.getElementById('clienteId').value = '';
+  document.getElementById('nomeCliente').value = '';
+  document.getElementById('emailCliente').value = '';
+  document.getElementById('telefoneCliente').value = '';
+  document.getElementById('cidadeCliente').value = '';
+  document.getElementById('modalCliente').classList.add('show');
+}
+
+function editarCliente(index) {
+  var c = clientes[index];
+  if (!c) return;
+  document.getElementById('modalClienteTitle').textContent = 'Editar Cliente';
+  document.getElementById('clienteId').value = c.id;
+  document.getElementById('nomeCliente').value = c.nome;
+  document.getElementById('emailCliente').value = c.email;
+  document.getElementById('telefoneCliente').value = c.telefone || '';
+  document.getElementById('cidadeCliente').value = c.cidade || '';
+  document.getElementById('modalCliente').classList.add('show');
+}
+
+async function salvarCliente() {
+  var nome = document.getElementById('nomeCliente').value.trim();
+  var email = document.getElementById('emailCliente').value.trim();
+  var telefone = document.getElementById('telefoneCliente').value.trim();
+  var cidade = document.getElementById('cidadeCliente').value.trim();
+  if (!nome || !email) return alert('Nome e email são obrigatórios!');
+  var id = document.getElementById('clienteId').value;
+  try {
+    if (id) {
+      await api('/clientes/' + id, { method: 'PUT', body: JSON.stringify({ nome: nome, email: email, telefone: telefone, cidade: cidade }) });
+    } else {
+      await api('/clientes', { method: 'POST', body: JSON.stringify({ nome: nome, email: email, telefone: telefone, cidade: cidade }) });
+    }
+    fecharModal('modalCliente');
+    carregarClientes();
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+async function excluirCliente(id) {
+  if (!confirm('Excluir este cliente?')) return;
+  try {
+    await api('/clientes/' + id, { method: 'DELETE' });
+    carregarClientes();
+  } catch (e) {
+    alert(e.message);
   }
 }
 
